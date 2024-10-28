@@ -4,14 +4,16 @@
 //
 //  Created by Joseph DeWeese on 10/28/24.
 //
-
 import SwiftUI
 import SwiftData
 
-struct ItemsView: View {
+struct ItemsListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
+    @State private var showDeleteConfirmation: Bool = false
     @State private var showAddItem: Bool = false
+    
+    
     var body: some View {
         NavigationSplitView {
             List {
@@ -22,7 +24,6 @@ struct ItemsView: View {
                         Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
                     }
                 }
-              
             }
 #if os(macOS)
             .navigationSplitViewColumnWidth(min: 180, ideal: 200)
@@ -31,7 +32,7 @@ struct ItemsView: View {
                 ///profile pic button
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button{
-                      HapticManager.notification(type: .success)
+                        HapticManager.notification(type: .success)
                     } label: {
                         ZStack{
                             Circle()
@@ -79,6 +80,6 @@ struct ItemsView: View {
 }
 }
 #Preview {
-    ItemsView()
+    ItemsListView()
         .modelContainer(for: Item.self, inMemory: true)
 }

@@ -12,6 +12,7 @@ struct TabBarHomeView: View {
     @State private var activeTab: Tab = .grind
     /// For Smooth Shape Sliding Effect, We're going to use Matched Geometry Effect
     @Namespace private var animation
+   
     @State private var tabShapePosition: CGPoint = .zero
     init() {
         /// Hiding Tab Bar Due To SwiftUI iOS 16.4 Bug
@@ -27,7 +28,7 @@ struct TabBarHomeView: View {
                     /// Bug on iOS 16.4
                     // .toolbar(.hidden, for: .tabBar)
                     
-                        ItemsView()
+                        ItemsListView()
                         .tag(Tab.items)
                     /// Hiding Native Tab Bar
                     /// Bug on iOS 16.4
