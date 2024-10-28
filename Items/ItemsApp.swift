@@ -28,5 +28,12 @@ struct ItemsApp: App {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
+        
+       
+    }
+    init( ) {
+        print("Begin:")
+        print(URL.applicationSupportDirectory.path(percentEncoded: false))
+        print(":End")
     }
 }
