@@ -6,112 +6,96 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddItemView: View {
-    /// Env Properties
+    //   MARK: Env Properties
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @State var title: String = ""
     @State var remark: String = ""
-    @State var dateAdded: Date = .now
-    
-    
-    
-    
     var body: some View {
         NavigationStack {
-            ScrollView(.vertical) {
-                VStack(alignment: .center, spacing: 7){
-                   
-                    CustomSection("Title", "Item Title...", value: $title)
-                        .font(.title2)
+            ScrollView{
+                VStack(alignment: .leading, spacing: 7){
+                    Text("Item Title")
+                        .font(.caption)
+                        .fontDesign(.serif)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.blue)
+                        .padding(.leading, 20)
+                    TextField("Item Title...", text:$title)
+                        .padding()
+                        .font(.headline)
                         .fontDesign(.serif)
                         .foregroundStyle(.black)
-                        .background(.thinMaterial.shadow(.drop(color: .black.opacity(0.55), radius: 4)), in: .rect(cornerRadius: 10))
-                        .padding(.horizontal, 20)
+                        .background(.thinMaterial.shadow(.drop(color: .black.opacity(0.45), radius: 3)), in: .rect(cornerRadius: 7))
+                        .padding(.horizontal)
                         .padding(.bottom, 10)
-                    
                     CustomTextEditSection("Brief Description of Item...", value: $remark)
                         .padding(.horizontal, 10)
                         .lineLimit(3)
-                        .font(.title2)
                         .fontDesign(.serif)
                         .foregroundStyle(.black)
                         .background(.thinMaterial.shadow(.drop(color: .black.opacity(0.55), radius: 4)), in: .rect(cornerRadius: 10))
-                 
+                    
                     /// Giving Some Space for tapping
                         .padding(.horizontal)
                     
-                    Spacer( )
-                }
-                .navigationTitle("Add an Item")
-                .toolbar{
-                    ToolbarItem(placement: .topBarLeading, content: {
-                        Button {
-                            HapticManager.notification(type: .success)
-                            dismiss()
-                        } label: {
-                            Text("Cancel")
+                    
+                }.padding(.horizontal,3)
+                
+                    .toolbar{
+                        ToolbarItem(placement: .topBarLeading, content: {
+                            Button {
+                                HapticManager.notification(type: .success)
+                                dismiss()
+                            } label: {
+                                Text("Cancel")
+                                    .fontWeight(.bold)
+                            }
+                            .buttonStyle(.automatic)
+                        })
+                        ToolbarItem(placement: .principal, content: {
+                            LogoView()
+                        })
+                        //MARK:  SAVE BUTTON
+                        ToolbarItem(placement:.topBarTrailing){
+                            Button {
+                                let newItem = Item(title: title, remark: remark, timestamp: Date.now)
+                                context.insert(newItem)
+                                HapticManager.notification(type: .success)
+                                dismiss()
+                            } label: {
+                                Text("Save")
+                                    .fontDesign(.serif)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(.white)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .disabled(title.isEmpty || remark.isEmpty)
+                            .padding(.horizontal, 2)
                         }
-                        .buttonStyle(.automatic)
-                    })
-                    ToolbarItem(placement: .principal, content: {
-                        LogoView()
-                    })
-                    ToolbarItem(placement:.topBarTrailing, content: {
-                        Button {
-                            /// Saving Task
-                            //         saveItem()
-                            HapticManager.notification(type: .success)
-                            dismiss()
-                        } label: {
-                            Text("Save")
-                                .fontDesign(.serif)
-                                .fontWeight(.bold)
-                                .foregroundStyle(.white)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .disabled(title.isEmpty || remark.isEmpty)
-                        .padding(.horizontal, 2)
-                    })
-                }
-            }
+                    }
             }
         }
-        
     }
-    //MARK: - Private Methods -
+}
 
 
 #Preview {
     AddItemView()
 }
+//MARK:  CUSTOM SECTIONS
 
-@ViewBuilder
-func CustomSection(_ title: String, _ hint: String, value: Binding<String>) -> some View {
-    VStack(alignment: .leading, spacing: 5, content: {
-        Text(title)
-            .fontDesign(.serif)
-            .font(.title3)
-            .foregroundStyle(.gray)
-            .padding(.horizontal, 10)
-            .frame(height: 25)
-        
-        TextField(hint, text: value)
-            .padding(.horizontal, 10)
-            .background(.thinMaterial.shadow(.drop(color: .black.opacity(0.55), radius: 4)), in: .rect(cornerRadius: 10))
-            .foregroundStyle(.primary)
-            .fontDesign(.serif)
-            .frame(height: 25)
-    })
-}
 @ViewBuilder
 func CustomTextEditSection(_ title: String, value: Binding<String>) -> some View {
     VStack(alignment: .leading, spacing: 5, content: {
         Text(title)
             .fontDesign(.serif)
-            .font(.title3)
-            .foregroundStyle(.gray)
+            .font(.caption)
+            .foregroundStyle(.blue)
+            .fontWeight(.bold)
             .padding(.horizontal, 10)
             .frame(height: 35)
         
